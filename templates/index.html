@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>IP checker</title>
+        <style>
+            .choice_panel{
+                width: 200px;
+                height: auto;
+                background-color: rgb(202, 202, 242);
+                display: inline;
+                float: left;
+                margin: 10px;
+                border-radius: 10px;
+            }
+            .choice_panel_button{
+                width: 100%;
+                height: 40px;
+                background-color: rgb(202, 202, 242);
+                border: 1px solid #000000;
+            }
+            .stricness-level{
+                width: 100%; 
+                height: 40px;
+                background-color: rgb(202, 202, 242);
+            }
+            .container{
+                margin-top: 50px;
+                position: relative;
+            }
+            .activitis_panel{
+                width: auto;
+                height: 110px;
+            }
+            .log{
+                width: 200px;
+                height: 90px;
+                background-color: aliceblue;
+                display: inline-block;
+                margin: 10px;
+                position: flex;
+                top: 0;
+                left: 0;
+            }
+            .activitis_panel_button{
+                width: 200px;
+                height: 90px;
+                background-color: rgb(202, 202, 242);
+                display: inline-block;
+                margin: 10px;
+                top: auto;
+                right: 0;
+            }
+            .input_container{
+                width: 400px;
+                height: 400px;
+                margin-top: 5%;
+                display: none;
+                text-align: center;
+                margin-left: 35%;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                position: relative;
+            }
+            .add_button{
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+            }
+            table {
+            border-collapse: collapse;
+            border-radius: 10px;
+            background-color: rgb(202, 202, 242);
+            }
+            .table_button{
+                width: 100%;
+                height: 100%;
+                background-color: rgb(202, 202, 242);
+                border: 15px solid rgb(163, 163, 241);
+            }
+            th, td {
+                border: 1px solid #000000;
+                padding: 10px;
+                background-color: rgb(202, 202, 242);
+            }
+            .page{
+                background-color: rgb(241, 241, 253);;
+            }
+            .borders{
+                border: 15px solid rgb(163, 163, 241);
+            }
+        </style>
+    </head>
+    <body class="page" id="background">
+        <div id="ip_blacklist_appender" style="display: none;">
+            <div class="activitis_panel">
+                    <button class="activitis_panel_button" id="return_to_main_menu">Назад
+                    <button class="activitis_panel_button" id="log1">Log
+            </div>
+            <div style="width: 100%; height: 70%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  overflow-y: scroll">
+                <table id="edit_table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Прокси</th>
+                        <th>IP-адрес</th>
+                        <th>Добавить в черный список</th>
+                        <th>Проверить ip адресс</th>
+                    </tr>
+                </thead>
+                <tbody id="ip-body">
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div id="blacklist_editor" style="display: none;">
+            <button id="edit_blacklist_back" class="activitis_panel_button">Назад</button><br>
+            <div style="width: 100%; height: 70%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);  overflow-y: scroll">
+                <table id="edit_table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>IP-адрес</th>
+                            <th>Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody id="edit_body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="input_container" id="account_input">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <span>
+                    Введите API ключ<br>
+                    <input type="text" id="API_key_input"><br>
+                    <button class="add_button" id="add_account_confirm">Продолжить</button><br>
+                    <button class="add_button" id="cancle_add_account">Отмена</button>
+                </span>
+            </div>
+        </div>
+        <div class="input_container" id="load_panel">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <span>
+                    Идет загрузка<br>
+                    подождите!
+                </span>
+            </div>
+        </div>
+        <div class="input_container" id="IQS_proxy_input">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <span>
+                    Введите логин прокси<br>
+                    <input type="text" id="Proxy_login_input"><br>
+                    Введите пароль прокси<br>
+                    <input type="text" id="Proxy_password_input"><br>
+                    Введите ip адресс прокси<br>
+                    <input type="text" id="Proxy_ip_input"><br>
+                    Введите порт прокси<br>
+                    <input type="number" id="Proxy_port_input" min="1"><br>
+                    <span>
+                        <input type="radio" name="user_proxy_type" value="http" checked> http
+                        <input type="radio" name="user_proxy_type" value="socks5"> socks5
+                    </span>
+                    <button class="add_button" id="add_proxy_confirm">Продолжить</button><br>
+                    <button class="add_button" id="cancle_add_proxy">Отмена</button>
+                </span>
+            </div>
+        </div>
+        <div id="main_funcs" style="display: block;">
+            <div class="activitis_panel">
+                <span>
+                    <button class="activitis_panel_button" id="log">Log
+                    <button class="activitis_panel_button" id="run" style="right: 50%;">Запуск
+                    <button class="activitis_panel_button" id="settings_button">Настройки
+                </span>
+            </div>
+            <div class="container" id="parsing_settings_panels" style="display: none;">
+                    <div class="choice_panel" id="IQS_accounts">
+                        <table id="account_table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">№</th>
+                                    <th style="width: 100px;">Удалить</th>
+                                </tr>
+                            </thead>
+                            <tbody id="account_body">
+                            </tbody>
+                        </table>
+                        <button class="choice_panel_button" id="account_add">Добавить аккаунт</button>
+                    </div>
+                    <div class="choice_panel" id="IQS_proxy">
+                        <table id="proxy_table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">№</th>
+                                    <th style="width: 100px;">Удалить</th>
+                                </tr>
+                            </thead>
+                            <tbody id="proxy_body">
+                            </tbody>
+                        </table>
+                        <button class="choice_panel_button" id="proxy_add">Добавить прокси</button>
+                    </div>
+                    <div class="choice_panel" id="Check_mods">
+                        <div style="width: 100%;">Строгость проверки</div><br>
+                        <select class="stricness-level" name="strick" id="strictness_level">
+                            <option value="0">Уровень 1</option>
+                            <option value="1">Уровень 2</option>
+                            <option value="2">Уровень 3</option>
+                            <option value="3">Уровень 4</option>
+                        </select><br>
+                        <input type="checkbox" id="public_access" checked="True"> Разрешить публичные точки доступа (меньше строгость проверки)<br>
+                        <input type="checkbox" id="mobile_device" checked="False">Оценить IP-адреса как мобильные устройства (меньше строгость проверки)<br>
+                        <input type="checkbox" id="lighter_penalties" checked>Более мягкие санкции для IP-адресов смешанного качества (меньше строгость проверки)<br>
+                    </div>
+                    <div class="choice_panel" id="Add_new_proxy" style="width: 500px; height: 500px; display: block;">
+                        <label for="fileInput" style="margin-top: 15%; margin-left: 12%; position: absolute; color:rgb(0, 0, 0); text-align: center">+<br>Drop file to upload<br>or select file</label>
+                        <input type="file" id="fileInput" accept=".txt" style="width: 100%; height: 100%; opacity: 0; ">
+                    </div>
+                    <div class="choice_panel" id="Black_lists" style="width: auto; height: auto; display: block;">
+                            <span>
+                                <div>Режим проверки</div><br>
+                                <input type="radio" name="Oktet" value="0"> По третьему октету
+                                <input type="radio" name="Oktet" value="1" checked> По четвертому октету<br>
+                            </span><br>
+                            <div>Тип прокси</div><br>
+                            <span>
+                                <input type="radio" name="proxy_type" value="socks5"> SOCKS5
+                                <input type="radio" name="proxy_type" value="http" checked> HTTP/HTTPS<br>
+                            </span><br>
+                            <span>
+                                <div>Количество потоков</div>
+                                <input type="number" id="mult" style="width: 95%" min="1" max="30" value="1"><br>
+                            </span>
+                            <table id="blacklist_table" style="background-color: #007bff;">
+                                <tbody id="blacklist_body">
+                                </tbody><br>
+                                <button class="choice_panel_button" id="blacklist_add">Добавить</button><br>
+                            </table>
+                    </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='buttons_scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='blacklist_counter.js') }}"></script>
+    </body>
+</html>
